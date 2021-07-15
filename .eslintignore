@@ -1,0 +1,4 @@
+dst
+**/*.js
+src/entity/type/*.validator.ts
+src/typeorm/migration/*.ts

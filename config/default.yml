@@ -1,0 +1,6 @@
+# default
+typeorm:
+  logging: false
+date:
+  locale: ja
+  timezone: Asia/Tokyo
