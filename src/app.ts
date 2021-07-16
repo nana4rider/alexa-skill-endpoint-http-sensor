@@ -4,12 +4,15 @@ import * as config from 'config';
 import * as express from 'express';
 import { NextFunction, Request, Response } from 'express';
 import { HttpError } from 'http-errors';
+import { StatusCodes } from 'http-status-codes';
 import * as log4js from 'log4js';
 import * as luxon from 'luxon';
 import { createConnection } from 'typeorm';
 import * as log4jconfig from './config/log4js';
 import * as ormconfig from './config/ormconfig';
 import Context from './Context';
+import { ResponseResult } from './controller/type/ResponseResult';
+import { updateTokenTimer } from './timer/updateToken';
 
 const { app } = Context;
 
@@ -38,10 +41,7 @@ void (async () => {
 })();
 
 // Express
-app.set('view engine', 'pug');
-// app.locals.basedir = path.join(__dirname, '../views');
 app.use(compression());
-app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(log4js.connectLogger(accessLogger, { level: 'INFO' }));
@@ -50,7 +50,7 @@ app.use(log4js.connectLogger(accessLogger, { level: 'INFO' }));
 require('./controller/main');
 
 app.get('/', (req, res) => {
-  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.writeHead(StatusCodes.OK, { 'Content-Type': 'text/plain' });
   res.end('Alexa Event Gateway');
 });
 
@@ -63,15 +63,22 @@ app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
 
   if (error instanceof HttpError) {
     res.status(error.statusCode);
-    res.send({ errorMessage: error.message });
+    res.send({
+      result: ResponseResult.ERROR,
+      errorMessage: error.message
+    });
   } else {
-    res.status(500);
-    res.send({ errorMessage: 'エラーが発生しました。' });
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR);
+    res.send({
+      result: ResponseResult.ERROR,
+      errorMessage: 'エラーが発生しました。'
+    });
   }
 });
 
 app.listen(process.env.PORT || 80, () => {
   logger.info('- HTTP Server Start -');
+  updateTokenTimer(0);
 });
 
 // axios

@@ -4,8 +4,8 @@ import { DateTimeTransformer } from './transformer/DateTimeTransformer';
 
 @Entity()
 @Unique(['provider'])
-export class Oauth2 {
-  @PrimaryGeneratedColumn({ type: 'integer'})
+export class OAuth2 {
+  @PrimaryGeneratedColumn({ type: 'integer' })
   id!: number;
 
   @Column('text')
