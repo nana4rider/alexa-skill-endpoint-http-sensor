@@ -4,7 +4,7 @@ import { getLogger } from 'log4js';
 import { DateTime } from 'luxon';
 import { env } from 'process';
 import { getManager } from 'typeorm';
-import { OAuth2 } from '../entity/OAuth2';
+import { OAuthToken } from '../entity/OAuthToken';
 
 const logger = getLogger();
 
@@ -37,20 +37,20 @@ async function updateToken() {
   let nextInterval = 0;
 
   await getManager().transaction(async manager => {
-    let repo = manager.getRepository(OAuth2);
-    let oauth2 = await repo.findOne({
-      where: { provider: 'alexa' },
+    let repo = manager.getRepository(OAuthToken);
+    let oauthToken = await repo.findOne({
+      where: { clientId: env.ALEXA_CLIENT_ID },
       lock: { mode: 'pessimistic_write' }
     });
-    if (!oauth2) {
-      throw new Error('OAuth2 Data is not found.');
+    if (!oauthToken) {
+      throw new Error('OAuthToken is not found.');
     }
 
     let responseToken = await axios.post(
       config.get('alexa.api.token'),
       {
         grant_type: 'refresh_token',
-        refresh_token: oauth2.refreshToken,
+        refresh_token: oauthToken.refreshToken,
         client_id: env.ALEXA_CLIENT_ID,
         client_secret: env.ALEXA_CLIENT_SECRET
       }
@@ -60,13 +60,13 @@ async function updateToken() {
     let expiresIn = responseData.expires_in;
     let expire = DateTime.fromHTTP(responseToken.headers.date).plus({ seconds: expiresIn });
 
-    oauth2.accessToken = responseData.access_token;
-    oauth2.refreshToken = responseData.refresh_token;
-    oauth2.expire = expire;
+    oauthToken.accessToken = responseData.access_token;
+    oauthToken.refreshToken = responseData.refresh_token;
+    oauthToken.expire = expire;
 
-    await repo.save(oauth2);
+    await repo.save(oauthToken);
 
-    logger.info('OAuth2 updated');
+    logger.info('OAuthToken updated');
     nextInterval = expiresIn - 60;
   });
 

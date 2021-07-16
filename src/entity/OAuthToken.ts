@@ -3,13 +3,13 @@ import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Unique } from
 import { DateTimeTransformer } from './transformer/DateTimeTransformer';
 
 @Entity()
-@Unique(['provider'])
-export class OAuth2 {
+@Unique(['clientId'])
+export class OAuthToken {
   @PrimaryGeneratedColumn({ type: 'integer' })
   id!: number;
 
   @Column('text')
-  provider!: string;
+  clientId!: string;
 
   @Column('text')
   accessToken!: string;

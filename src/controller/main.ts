@@ -3,10 +3,11 @@ import * as config from 'config';
 import { StatusCodes } from 'http-status-codes';
 import { getLogger } from 'log4js';
 import { DateTime } from 'luxon';
+import { env } from 'process';
 import { getRepository } from 'typeorm';
 import { v4 as uuid } from 'uuid';
 import Context from '../Context';
-import { OAuth2 } from '../entity/OAuth2';
+import { OAuthToken } from '../entity/OAuthToken';
 import { ResponseResult } from './type/ResponseResult';
 import createHttpError = require('http-errors');
 
@@ -15,27 +16,28 @@ const logger = getLogger();
 
 type SensorState = 'open' | 'close';
 
-app.get('/:number/:state(open|close)', async (req, res, next) => {
-  let number = req.params;
+app.get('/:sensorId(\\d+)/:state(open|close)', async (req, res, next) => {
+  let sensorId = Number(req.params.sensorId);
   let state = req.params.state as SensorState;
 
   try {
-    let repo = getRepository(OAuth2);
-    let oauth2 = await repo.findOne({ where: { provider: 'alexa' } });
-    if (!oauth2) {
-      next(createHttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'OAuth2 Data is not found.'));
+    let repo = getRepository(OAuthToken);
+    let oauthToken = await repo.findOne({ where: { clientId: env.ALEXA_CLIENT_ID } });
+    if (!oauthToken) {
+      next(createHttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'OAuthToken is not found.'));
       return;
     }
 
-    let endpointId = 'NFCContactSensor' + number;
     let responseEvent = await axios.post(
       config.get('alexa.api.event'),
-      createEvent(oauth2.accessToken, endpointId, state)
+      createEvent(oauthToken.accessToken, sensorId, state)
     );
     let statusCode = responseEvent.status;
+    let resultCode = statusCode == StatusCodes.ACCEPTED
+      ? ResponseResult.OK : ResponseResult.ERROR;
 
     res.status(statusCode).type('json').json({
-      result: statusCode ==  ResponseResult.OK,
+      result: resultCode,
       data: responseEvent.data
     });
   } catch (e) {
@@ -44,7 +46,7 @@ app.get('/:number/:state(open|close)', async (req, res, next) => {
   }
 });
 
-function createEvent(accessToken: string, endpointId: string, state: SensorState) {
+function createEvent(accessToken: string, sensorId: number, state: SensorState) {
   let timeOfSample = DateTime.utc().toString();
   let stateValue = state === 'open' ? 'DETECTED' : 'NOT_DETECTED';
 
@@ -72,7 +74,7 @@ function createEvent(accessToken: string, endpointId: string, state: SensorState
           type: 'BearerToken',
           token: accessToken
         },
-        endpointId: endpointId
+        endpointId: 'NFCContactSensor' + sensorId
       },
       payload: {
         change: {

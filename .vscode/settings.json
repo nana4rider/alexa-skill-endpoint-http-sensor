@@ -6,9 +6,8 @@
     "**/Downloads/**/*": true
   },
   "files.autoGuessEncoding": true,
-  "javascript.implicitProjectConfig.experimentalDecorators": true,
+  "js/ts.implicitProjectConfig.experimentalDecorators": true,
   "typescript.validate.enable": true,
-  "eslint.enable": true,
   "eslint.debug": false,
   "editor.codeActionsOnSave": {
     "source.fixAll": true,
