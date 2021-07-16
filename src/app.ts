@@ -78,7 +78,7 @@ app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
 
 app.listen(process.env.PORT || 80, () => {
   logger.info('- HTTP Server Start -');
-  updateTokenTimer(0);
+  void updateTokenTimer(3);
 });
 
 // axios

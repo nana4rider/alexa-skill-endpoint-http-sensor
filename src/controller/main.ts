@@ -36,8 +36,7 @@ app.get('/:sensorId(\\d+)/:command(open|close|toggle)', async (req, res, next) =
     await getManager().transaction(async manager => {
       let repo = manager.getRepository(ContactSensor);
       let contactSensor = await repo.findOne({
-        where: { endpointId: endpointId },
-        lock: { mode: 'pessimistic_write' }
+        where: { endpointId: endpointId }
       });
       if (!contactSensor) {
         contactSensor = repo.create({

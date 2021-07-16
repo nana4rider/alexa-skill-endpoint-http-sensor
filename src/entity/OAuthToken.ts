@@ -2,7 +2,7 @@ import { DateTime } from 'luxon';
 import { Column, CreateDateColumn, Entity, PrimaryColumn } from 'typeorm';
 import { DateTimeTransformer } from './transformer/DateTimeTransformer';
 
-@Entity()
+@Entity('oauth_token')
 export class OAuthToken {
   @PrimaryColumn('text')
   clientId!: string;

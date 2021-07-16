@@ -39,8 +39,7 @@ async function updateToken() {
   await getManager().transaction(async manager => {
     let repo = manager.getRepository(OAuthToken);
     let oauthToken = await repo.findOne({
-      where: { clientId: env.ALEXA_CLIENT_ID },
-      lock: { mode: 'pessimistic_write' }
+      where: { clientId: env.ALEXA_CLIENT_ID }
     });
     if (!oauthToken) {
       throw new Error('OAuthToken is not found.');
