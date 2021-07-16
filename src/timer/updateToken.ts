@@ -34,7 +34,7 @@ export async function updateTokenTimer(interval: number) {
  * @returns 次回の更新時間
  */
 async function updateToken() {
-  let nextInterval = 0;
+  let nextInterval : number;
 
   await getManager().transaction(async manager => {
     let repo = manager.getRepository(OAuthToken);
@@ -70,8 +70,6 @@ async function updateToken() {
     nextInterval = expiresIn - 60;
   });
 
-  if (nextInterval <= 0) throw new Error('nextInterval <= 0');
-
   // 有効期限の60秒前に次回の更新を行う
-  return nextInterval;
+  return nextInterval!;
 }

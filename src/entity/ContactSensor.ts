@@ -1,20 +1,15 @@
 import { DateTime } from 'luxon';
 import { Column, CreateDateColumn, Entity, PrimaryColumn } from 'typeorm';
 import { DateTimeTransformer } from './transformer/DateTimeTransformer';
+import { AlexaSensorStatus as AlexaSensorStatus } from './type/AlexaSensorStatus';
 
 @Entity()
-export class OAuthToken {
+export class ContactSensor {
   @PrimaryColumn('text')
-  clientId!: string;
+  endpointId!: string;
 
   @Column('text')
-  accessToken!: string;
-
-  @Column('text')
-  refreshToken!: string;
-
-  @Column('datetime', { transformer: DateTimeTransformer.instance })
-  expire!: DateTime;
+  status!: AlexaSensorStatus;
 
   @CreateDateColumn({ transformer: DateTimeTransformer.instance })
   readonly createdAt!: DateTime;
