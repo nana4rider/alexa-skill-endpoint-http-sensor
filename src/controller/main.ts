@@ -31,7 +31,7 @@ app.get('/:sensorId(\\d+)/:command(open|close|toggle)', async (req, res, next) =
       return;
     }
 
-    let sensorStatus : AlexaSensorStatus;
+    let sensorStatus: AlexaSensorStatus;
 
     await getManager().transaction(async manager => {
       let repo = manager.getRepository(ContactSensor);
@@ -78,6 +78,8 @@ app.get('/:sensorId(\\d+)/:command(open|close|toggle)', async (req, res, next) =
 });
 
 function createEvent(accessToken: string, endpointId: string, sensorStatus: AlexaSensorStatus) {
+  logger.info(`event: ${endpointId} -> ${sensorStatus}`);
+
   let timeOfSample = DateTime.utc().toString();
 
   return {
