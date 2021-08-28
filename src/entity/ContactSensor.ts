@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import { Column, CreateDateColumn, Entity, PrimaryColumn } from 'typeorm';
-import { DateTimeTransformer } from './transformer/DateTimeTransformer';
-import { AlexaSensorStatus as AlexaSensorStatus } from './type/AlexaSensorStatus';
+import { DateTimeTransformer } from 'typeorm-util-ts';
+import { AlexaSensorStatus } from '../client/SensorClient';
 
 @Entity()
 export class ContactSensor {

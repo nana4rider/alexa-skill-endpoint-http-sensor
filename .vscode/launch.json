@@ -15,7 +15,7 @@
       "outputCapture": "std",
       "envFile": "${workspaceRoot}\\.env",
       "env": {
-        "NODE_ENV": "develop"
+        "NODE_ENV": "development"
       }
     }
   ],

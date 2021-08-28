@@ -1,14 +1,13 @@
 import * as log4js from 'log4js';
 import { ConnectionOptions } from 'typeorm';
-import { NamingStrategy } from '../typeorm/NamingStrategy';
-import { TypeormLog4jsLogger } from '../typeorm/TypeormLog4jsLogger';
+import { Log4jsLogger, NamingStrategy } from 'typeorm-util-ts';
 
 let database;
 
 switch (process.env.NODE_ENV) {
-case 'develop':
+case 'development':
 case 'production':
-  // NODE_ENV=develop,production
+  // NODE_ENV=development,production
   database = '.data/sqlite3.db';
   break;
 default:
@@ -24,7 +23,7 @@ const ormconfig: ConnectionOptions = {
   cli: {
     migrationsDir: 'src/typeorm/migration'
   },
-  logger: new TypeormLog4jsLogger(log4js.getLogger('sql')),
+  logger: new Log4jsLogger(log4js.getLogger('sql')),
   namingStrategy: new NamingStrategy()
 };
 

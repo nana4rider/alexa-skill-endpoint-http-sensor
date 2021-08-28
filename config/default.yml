@@ -4,7 +4,3 @@ typeorm:
 date:
   locale: ja
   timezone: Asia/Tokyo
-alexa:
-  api:
-    token: https://api.amazon.com/auth/o2/token
-    event: https://api.fe.amazonalexa.com/v3/events
