@@ -30,10 +30,6 @@
       "pattern": ".data/log/access.log"
     },
     {
-      "title": "request.log",
-      "pattern": ".data/log/request.log"
-    },
-    {
       "title": "sql.log",
       "pattern": ".data/log/sql.log"
     }
