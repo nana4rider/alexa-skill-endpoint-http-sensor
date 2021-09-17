@@ -2,13 +2,11 @@
 
 Alexa Smart Home Skill HTTP Sensor
 
-# データベース構成の変更
-```
-npm run miggen -- [name]
-npm run migrun
-```
+HTTPリクエストをトリガーに、Alexaの定型アクションを実行するためのダミーコンタクトセンサーです。  
+利用には、[alexa-skill-lambda-http-sensor](https://github.com/nana4rider/alexa-skill-lambda-http-sensor)をAWS Lambdaにデプロイする必要があります。
 
-# 認可コードからリフレッシュトークンを取得
+## 初期設定
+### 認可コードからリフレッシュトークンを取得
 ```bash
 curl -i -X POST \
    -H "Content-Type:application/json" \
@@ -21,3 +19,11 @@ curl -i -X POST \
 }' \
  'https://api.amazon.com/auth/o2/token'
 ```
+
+## API
+* コンタクトセンサーを開きます  
+`GET /[Sensor Number]/open/`
+* コンタクトセンサーを閉じます  
+`GET /[Sensor Number]/close/`
+* コンタクトセンサーが閉じていれば開き、開いていれば閉じます  
+`GET /[Sensor Number]/toggle/`
