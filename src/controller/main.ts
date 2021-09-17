@@ -1,5 +1,5 @@
+import config from 'config';
 import PromiseRouter from 'express-promise-router';
-import { env } from 'process';
 import { getManager } from 'typeorm';
 import { AlexaSensorStatus, SensorClient } from '../client/SensorClient';
 import Context from '../Context';
@@ -7,14 +7,10 @@ import { ContactSensor } from '../entity/ContactSensor';
 
 const { app } = Context;
 
-if (!env.ALEXA_CLIENT_ID || !env.ALEXA_CLIENT_SECRET || !env.ALEXA_REFRESH_TOKEN) {
-  throw new Error('env.ALEXA_* is undefined.');
-}
-
 const sensorClient = new SensorClient(
-  env.ALEXA_CLIENT_ID,
-  env.ALEXA_CLIENT_SECRET,
-  env.ALEXA_REFRESH_TOKEN
+  config.get('alexa.clientId'),
+  config.get('alexa.clientSecret'),
+  config.get('alexa.refreshToken'),
 );
 
 const rootRouter = PromiseRouter();

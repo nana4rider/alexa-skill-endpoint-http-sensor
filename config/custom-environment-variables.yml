@@ -1,0 +1,7 @@
+env: NODE_ENV
+server:
+  port: PORT
+alexa:
+  clientId: ALEXA_CLIENT_ID
+  clientSecret: ALEXA_CLIENT_SECRET
+  refreshToken: ALEXA_REFRESH_TOKEN

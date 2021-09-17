@@ -1,17 +1,18 @@
+import config from 'config';
 import * as log4js from 'log4js';
 import { ConnectionOptions } from 'typeorm';
 import { Log4jsLogger, NamingStrategy } from 'typeorm-util-ts';
 
 let database;
-
-switch (process.env.NODE_ENV) {
+const nodeEnv: string = config.get('env');
+switch (nodeEnv) {
 case 'development':
 case 'production':
   // NODE_ENV=development,production
   database = '.data/sqlite3.db';
   break;
 default:
-  throw new Error('NODE_ENV=' + process.env.NODE_ENV);
+  throw new Error('NODE_ENV=' + nodeEnv);
 }
 
 const ormconfig: ConnectionOptions = {

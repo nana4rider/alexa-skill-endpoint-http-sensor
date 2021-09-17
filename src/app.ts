@@ -18,7 +18,7 @@ luxon.Settings.defaultZone = timezone;
 luxon.Settings.throwOnInvalid = true;
 
 // log4js
-log4js.configure(log4jconfig.configures[process.env.NODE_ENV!]);
+log4js.configure(log4jconfig.configures[config.get('env') as string]);
 const logger = log4js.getLogger();
 const accessLogger = log4js.getLogger('access');
 
@@ -55,6 +55,6 @@ app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
   }
 });
 
-app.listen(process.env.PORT || 80, () => {
+app.listen(config.get('server.port'), () => {
   logger.info('- HTTP Server Start -');
 });
