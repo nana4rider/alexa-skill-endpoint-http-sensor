@@ -25,6 +25,9 @@ sequenceDiagram
 
 ## 初期設定
 ### 認可コードからリフレッシュトークンを取得
+
+認可コードはAlexaの検出応答実行時にログ出力されるので、CloudWatchで確認してください。
+
 ```bash
 curl -i -X POST \
    -H "Content-Type:application/json" \
